@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Message App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="pizza.jpg" alt="Description of Image">
+        </div>
+        <div class="text-container">
+            <h1>Log Message App</h1>
+            <p>Send messages to the logging service and view the results below.</p>
+        </div>
+    </div>
+
+    <div class="services-container">
+        <div class="box">
+            <input type="text" id="message" placeholder="Enter your message">
+            <button onclick="sendMessage()">Send</button>
+            <div id="response"></div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var message = document.getElementById('message').value;
+            fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(message)
+            })
+                .then(response => response.json())
+                .then(data => document.getElementById('response').textContent = JSON.stringify(data, null, 2));
+        }
+
+    </script>
+</body>
+
+</html>
