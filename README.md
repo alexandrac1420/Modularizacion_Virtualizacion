@@ -2,7 +2,8 @@
 
 This project implements a microservices architecture using Spring Boot, Docker, and MongoDB. The system allows users to send messages through a load balancer that distributes requests among multiple instances of the logging service, which then stores the data in a MongoDB database. The results of the last 10 logs are displayed on a web interface.
 
-![Demo GIF](https://github.com/alexandrac1420/Servidores_Aplicaciones/blob/master/Pictures/gif%20(1).gif)
+![Demo GIF](https://github.com/alexandrac1420/Modularizacion_Virtualizacion/blob/master/Pictures/Dise%C3%B1o%20sin%20t%C3%ADtulo%20(1).gif)
+![Demo GIF](https://github.com/alexandrac1420/Modularizacion_Virtualizacion/blob/master/Pictures/download.gif)
 
 ## Getting Started
 
@@ -107,7 +108,7 @@ The user interface allows users to send messages and interact with various servi
     
 ## Architecture
 
-![Architecture Diagram](https://github.com/alexandrac1420/Servidores_Aplicaciones/blob/master/Pictures/Arquitectura.png)
+![Architecture Diagram](https://github.com/alexandrac1420/Modularizacion_Virtualizacion/blob/master/Pictures/Arquitectura.png)
 
 This project is designed using a microservices architecture, where each service is decoupled and independently managed. The architecture is containerized using Docker, allowing the application to be deployed and scaled across multiple environments, such as local development, cloud infrastructure, and CI/CD pipelines. Below is a detailed breakdown of the system's architecture and how its components interact.
 
@@ -148,7 +149,7 @@ The system is composed of several key components:
 
 ## Class Diagram
 
-![Class Diagram](https://github.com/alexandrac1420/Servidores_Aplicaciones/blob/master/Pictures/diagramaClases.png)
+![Class Diagram](https://github.com/alexandrac1420/Modularizacion_Virtualizacion/blob/master/Pictures/diagramaClases.png)
 
 ### Overview
 
@@ -297,7 +298,7 @@ This test report covers the verification of key components in the microservices 
 - **Result:** Passed.
 - **Verification:** The test confirmed that the default port was used correctly.
    
- ![image](https://github.com/user-attachments/assets/1184e116-fcb4-484e-9770-0d829d42d8ca)
+![image](https://github.com/user-attachments/assets/f4e55516-ed59-4728-b72d-02a17dbf4e28)
 
 ### Building Docker Images
 
@@ -379,6 +380,8 @@ To verify that all containers are running correctly on the virtual machine, the 
 ```sh
 docker ps
 ```
+
+![Image](https://github.com/alexandrac1420/Modularizacion_Virtualizacion/blob/master/Pictures/image.png)
 
 ## Built With
 
