@@ -15,7 +15,7 @@ services:
             dockerfile: Dockerfile
         container_name: logservice1
         environment:
-            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logdb
+            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logs
         ports:
             - "34001:6000"
     
@@ -25,7 +25,7 @@ services:
             dockerfile: Dockerfile
         container_name: logservice2
         environment:
-            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logdb
+            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logs
         ports:
             - "34002:6000"
     
@@ -35,7 +35,7 @@ services:
             dockerfile: Dockerfile
         container_name: logservice3
         environment:
-            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logdb
+            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logs
         ports:
             - "34003:6000"
     

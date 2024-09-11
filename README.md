@@ -1,10 +1,8 @@
-﻿# Java-Based Web Server Project
+﻿# Microservices Project with Spring Boot and Docker
 
-This project is a Java-based web server that serves HTML pages and static files and provides an Inversion of Control (IoC) framework for building web applications from Plain Old Java Objects (POJOs). It includes custom annotations similar to those in the Spring framework, and it handles both static file requests and RESTful API requests.
-
+This project implements a microservices architecture using Spring Boot, Docker, and MongoDB. The system allows users to send messages through a load balancer that distributes requests among multiple instances of the logging service, which then stores the data in a MongoDB database. The results of the last 10 logs are displayed on a web interface.
 
 ![Demo GIF](https://github.com/alexandrac1420/Servidores_Aplicaciones/blob/master/Pictures/gif%20(1).gif)
-
 
 ## Getting Started
 
@@ -55,13 +53,20 @@ You need to install the following tools and configure their dependencies:
     git version 2.2.1
     ```
 
+4. **Docker**
+    - Install Docker by following the instructions [here](https://docs.docker.com/get-docker/).
+    - Verify the installation:
+    ```sh
+    docker --version
+    ```
+
 ### Installing
 
 1. Clone the repository and navigate into the project directory:
     ```sh
-    git clone https://github.com/alexandrac1420/Servidores_Aplicaciones.git
+    git clonehttps://github.com/alexandrac1420/Modularizacion_Virtualizacion.git
 
-    cd Servidores_Aplicaciones
+    cd Modularizacion_Virtualizacion
     ```
 
 2. Build the project:
@@ -78,93 +83,67 @@ You need to install the following tools and configure their dependencies:
 
 3. Run the application:
     ```sh
-    java -cp target/SpringEci-1.0-SNAPSHOT.jar edu.escuelaing.arep.SimpleWebServer 
+    java -cp target/DockerAWS-1.0-SNAPSHOT.jar edu.escuelaing.arep.RestServiceApplication 
 
     ```
-    When running the application, the following message should appear
-
-    ```
-    Ready to receive on port 8080...
-    ```
-
     And now you can access `index.html` and other static files in http://localhost:8080/index.html
 
-### Usage
+## Usage
 
-When you access [http://localhost:8080/index.html](http://localhost:8080/index.html), you will be greeted by a webpage that allows you to interact with various services provided by the server. The page is designed with a clean and organized layout, featuring sections for different services, each with their own functionality. Here’s a detailed explanation of what you’ll find and how to use each service:
+The user interface allows users to send messages and interact with various services in the system. Below are the key services.
 
-#### 1. Current Time Service
-![image](https://github.com/user-attachments/assets/a71f3f5a-3b45-4381-bb7d-bb830483ea91)
+#### 1. Logging Service
 
-- **Description:** This section provides the current time.
-- **How to Use:** Click the "Get Current Time" button.
-- **Expected Behavior:** The server will respond with the current time.
-- **Notes:** No additional input is required for this service.
+- **Description:** Allows sending messages that will be stored in the MongoDB database.
+- **How to use it:** Enter a message in the text field and press "Send".
+- **Expected behavior:** The message will be stored in MongoDB, and you will be able to see the last 10 messages.
 
-#### 2. Hello Service
-![image](https://github.com/user-attachments/assets/e32d1fba-1825-4521-a52b-c2b6d44e7e69)
-![image](https://github.com/user-attachments/assets/c302c266-edcf-48f6-acdd-0594356b2065)
+#### 2. Load Balancer Service
 
-- **Description:** This service returns a personalized greeting based on the name provided.
-- **How to Use:**
-  - Enter your name in the text input field labeled "Type your name here...".
-  - Click the "Get Greeting" button.
-- **Expected Behavior:** The server will respond with a greeting that includes the name you entered (e.g., "Hello Maria").
-- **Default Behavior:** If no name is provided, the server will default to "World" (e.g., "Hello World").
+- **Description:** The load balancer distributes requests among the different instances of `LogService` using a round-robin algorithm.
+- **Expected behavior:** Requests are evenly distributed among the instances of `LogService`.
 
-#### 3. Pi Service
-
-![image](https://github.com/user-attachments/assets/0912aa50-48bb-4bc8-9021-921ef73fbde1)
-![image](https://github.com/user-attachments/assets/cded0e19-2462-475a-ac2e-139a573f8a58)
-
-- **Description:** This service returns the value of π (pi) with a specified number of decimal places.
-- **How to Use:**
-  - Enter the number of decimal places you want in the input field labeled "Decimals...".
-  - Click the "Get Pi Value" button.
-- **Expected Behavior:** The server will respond with the value of π rounded to the specified number of decimal places (e.g., "3.14159" for 5 decimals).
-- **Default Behavior:** If no number of decimals is provided, the server will default to 2 decimal places (e.g., "3.14").
-
-#### 4. Random Number Service
-![image](https://github.com/user-attachments/assets/2a7ca542-3c37-400f-9b13-8f1240d57de4)
-![image](https://github.com/user-attachments/assets/b17eabd2-d0fb-468e-a121-b4ad4fc00aa4)
-
-- **Description:** This service returns a random number within a specified range.
-- **How to Use:**
-  - Enter the minimum value in the input field labeled "Min value...".
-  - Enter the maximum value in the input field labeled "Max value...".
-  - Click the "Get Random Number" button.
-- **Expected Behavior:** The server will respond with a random number between the provided minimum and maximum values.
-- **Default Behavior:** If no values are provided, the server will default to a minimum value of 0 and a maximum value of 1.
-
-Each service's result will be displayed directly on the page in the corresponding result area below the button used to make the request. If the server encounters any issues or the request parameters are invalid, appropriate error messages will be displayed.
 
     
 ## Architecture
 
 ![Architecture Diagram](https://github.com/alexandrac1420/Servidores_Aplicaciones/blob/master/Pictures/Arquitectura.png)
 
+This project is designed using a microservices architecture, where each service is decoupled and independently managed. The architecture is containerized using Docker, allowing the application to be deployed and scaled across multiple environments, such as local development, cloud infrastructure, and CI/CD pipelines. Below is a detailed breakdown of the system's architecture and how its components interact.
 
 ### Overview
 
-The web server architecture consists of several key components: a browser interface for static file requests, a web server to handle HTTP requests, and various services that provide RESTful API functionality. The server handles both static file requests (e.g., HTML, CSS, JS, images) and dynamic RESTful API requests.
+The system is composed of several key components:
 
-### Components
+1. **Client (Browser)**: The user interacts with the system through a web interface. The client sends HTTP requests to the backend services using a simple form where messages are submitted. The client can see the results directly on the interface, including the last 10 logs returned from the backend.
+   
+2. **Load Balancer (Round Robin)**: The `LoadBalancerController` acts as a central point to distribute incoming requests among multiple instances of `LogService`. The round-robin algorithm ensures that requests are evenly distributed across all available `LogService` instances, providing fault tolerance and load distribution. Each incoming request is forwarded to one of the `LogService` instances in a cyclic order.
 
-- **Browser:** The client interface where users interact with static files such as HTML, CSS, and JavaScript. The browser also sends requests to the server for RESTful services.
-- **Web Server:** Manages incoming HTTP requests, serves static files, and handles RESTful API requests. The main class `SimpleWebServer` oversees server operations and service management.
-- **Services:** Implemented to provide various functionalities:
-  - `CurrentTimeService`: Returns the current time.
-  - `HelloService`: Provides personalized greetings.
-  - `PiService`: Returns the value of π with a specified number of decimal places.
-  - `RandomService`: Generates random numbers within a specified range.
+3. **LogService**: Each instance of `LogService` is a Spring Boot-based microservice responsible for receiving and processing log messages. Once a message is received, it is stored in a MongoDB database. The `LogService` then responds with the last 10 logs stored in the database, which are displayed to the client. Each `LogService` instance is stateless, making them easy to scale horizontally.
+
+4. **MongoDB (Database)**: MongoDB is used to store log messages. The database is containerized using Docker and runs in a separate container. It acts as a central repository for all logs generated by the `LogService` instances. MongoDB provides high availability, scalability, and the ability to handle unstructured data efficiently. The database stores each log entry with a message and a timestamp, and the service can query the most recent 10 entries efficiently.
+
+5. **Dockerized Infrastructure**: Each service (`web`, `logservice1`, `logservice2`, `logservice3`, `db`) runs in its own Docker container. Docker Compose is used to orchestrate and manage these services, ensuring that the containers are networked together and that the services can communicate seamlessly. This containerized setup simplifies deployment and makes the entire system portable and easy to scale.
 
 ### Interaction Flow
 
-1. The **Client** (user's browser) accesses static files (HTML, CSS, JS, images) from the **Web Server** via port 8080.
-2. The **Web Server** handles requests for static files through `ClientHandler`.
-3. For RESTful API requests, the `ClientHandler` parses the request and routes it to the appropriate service.
-4. Each service processes the request and returns a response to the **Web Server**.
-5. The **Web Server** prepares the HTTP response and sends it back to the **Client**.
+1. **Client Request**: 
+   - The client (browser) sends an HTTP POST request containing a message to the load balancer (`/submit` endpoint). This request originates from the frontend, which presents a simple form for message input.
+   
+2. **Load Balancing**:
+   - The `LoadBalancerController` receives the client request and forwards it to one of the `LogService` instances using the round-robin algorithm. This ensures that each `LogService` instance handles an equal share of incoming requests, preventing overload on any single instance.
+
+3. **Message Processing**:
+   - The selected `LogService` instance processes the incoming message by storing it in the MongoDB database. It creates a `LogEntry` object containing the message and a timestamp, and then persists this object in the database.
+
+4. **Database Interaction**:
+   - MongoDB, running in its own Docker container, stores the logs in a collection. The logs are indexed by timestamp to allow for efficient retrieval of the most recent entries.
+
+5. **Response Generation**:
+   - Once the message is stored, the `LogService` instance queries MongoDB to retrieve the last 10 log entries. These are returned as a JSON array to the load balancer, which then forwards the response back to the client.
+
+6. **Client Response**:
+   - The client receives the response from the load balancer, which contains the last 10 logs in JSON format. These logs are then displayed on the web interface, providing immediate feedback to the user.
 
 
 ## Class Diagram
@@ -173,111 +152,245 @@ The web server architecture consists of several key components: a browser interf
 
 ### Overview
 
-The class diagram depicts the main classes and their relationships within the web server project. It includes custom annotations, service classes, and the server's core components.
+The main classes in the system can be grouped into three categories:
 
-### Class Descriptions
+1. **Controllers**: These handle incoming HTTP requests and route them to the appropriate services.
+2. **Models**: Data structures representing the information that is stored in the MongoDB database.
+3. **Repositories**: These provide an abstraction over MongoDB operations, allowing the system to interact with the database in a structured way.
 
-- **Annotations** (package `edu.escuelaing.arep.Annotations`):
-  - `GetMapping`: Maps HTTP GET requests to specific methods.
-  - `RequestMapping`: Maps HTTP requests to specific methods.
-  - `RequestParam`: Defines parameters for request methods with optional default values.
-  - `RestController`: Marks a class as a REST controller.
+### Detailed Class Breakdown
 
-- **Services** (package `edu.escuelaing.arep.Services`):
-  - `CurrentTimeService`: Provides the current time.
-  - `HelloService`: Returns a personalized greeting.
-  - `PiService`: Returns the value of π with specified decimal places.
-  - `RandomService`: Generates random numbers within a given range.
+#### 1. `RestServiceApplication`
 
-- **Server Components** (package `edu.escuelaing.arep`):
-  - `SimpleWebServer`: Manages server operations, including static file serving and service handling.
-  - `ClientHandler`: Handles HTTP requests, processes GET and POST requests, and interacts with services.
+- **Location**: `edu.escuelaing.arep`
+- **Description**: This is the main entry point of the Spring Boot application. It sets up the default server port and initializes the entire web service.
+- **Key Methods**:
+  - `main(String[] args)`: Launches the application.
+  - `getPort()`: Determines the port on which the service will run (defaults to 6000 unless an environment variable is set).
+
+#### 2. `LoadBalancerController`
+
+- **Location**: `edu.escuelaing.arep.controller`
+- **Description**: The `LoadBalancerController` is responsible for distributing incoming POST requests across multiple instances of the `LogService`. It uses a simple round-robin algorithm to balance the load evenly.
+- **Key Attributes**:
+  - `instances`: An array storing the URLs of the `LogService` instances.
+  - `currentInstance`: Tracks the current instance in the round-robin sequence.
+- **Key Methods**:
+  - `sendToLogService(String message)`: Accepts a message from the client and forwards it to one of the `LogService` instances, cycling through the available instances.
+  
+#### 3. `LogServiceController`
+
+- **Location**: `edu.escuelaing.arep.controller`
+- **Description**: The `LogServiceController` handles requests to log messages and retrieve the last 10 logs. It interacts with the MongoDB database through the `LogRepository`.
+- **Key Attributes**:
+  - `logRepository`: Injected Spring Data repository that manages access to the MongoDB database.
+- **Key Methods**:
+  - `logMessage(String message)`: Saves a log message to the database and returns the last 10 logs in JSON format.
+
+#### 4. `LogEntry`
+
+- **Location**: `edu.escuelaing.arep.model`
+- **Description**: The `LogEntry` class represents a log message in the system. It is stored in MongoDB as a document and consists of two main fields: the message and a timestamp.
+- **Key Attributes**:
+  - `id`: Unique identifier for each log entry (generated by MongoDB).
+  - `message`: The log message.
+  - `timestamp`: The time the message was created.
+- **Key Methods**:
+  - Standard getter and setter methods for each attribute.
+  - `toString()`: A method to output the log entry in a human-readable format.
+
+#### 5. `LogRepository`
+
+- **Location**: `edu.escuelaing.arep.repository`
+- **Description**: The `LogRepository` interface extends the `MongoRepository` interface from Spring Data, providing methods to save and retrieve `LogEntry` objects from the MongoDB database.
+- **Key Methods**:
+  - `findTop10ByOrderByTimestampDesc()`: Custom query method that retrieves the last 10 log entries, ordered by timestamp in descending order.
+
+### Key Class Relationships
+
+- **RestServiceApplication**: 
+  This is the root class that launches the Spring Boot application. It manages the lifecycle of all other components and binds the services to a specific port.
+
+- **LoadBalancerController**: 
+  Interacts with multiple `LogService` instances. It receives requests from the client and forwards them to a service instance using round-robin load balancing. This controller does not directly interact with MongoDB.
+
+- **LogServiceController**: 
+  Manages the core logging functionality. It receives requests from the load balancer, processes the logs, and interacts with MongoDB via `LogRepository`.
+
+- **LogRepository**: 
+  Provides the data access layer to MongoDB, allowing the service to save and retrieve logs.
+
+- **LogEntry**: 
+  Represents the log data stored in MongoDB. It is the entity that gets saved and retrieved through the `LogRepository`.
 
 
-## Test Report - Web Framework for REST Services and Static File Management
+## Test Report -  Microservices with Spring Boot and Docker
 
 ### Author
 - **Name**: Alexandra Cortes Tovar
 
 ### Date
-- **Date**: 04/09/2024
+- **Date**: 11/09/2024
 
-### Summary
+This test report covers the verification of key components in the microservices architecture. It ensures that the application behaves as expected under various scenarios, including data persistence, load balancing, and environment configuration.
 
-This report summarizes the unit tests conducted on the web server project, covering various functionalities including service responses and static file handling.
+### 1. Test: `LogEntryTest.testLogEntryCreation`
 
-### Tests Conducted
+- **Description:** Verifies that a `LogEntry` object is correctly created with a message and timestamp.
+- **Objective:** Ensure the constructor initializes `LogEntry` fields as expected.
+- **Test Scenario:** Create a `LogEntry` with a message and timestamp, and check that the values are correctly assigned.
+- **Expected Behavior:** The message and timestamp fields should match the input.
+- **Result:** Passed.
+- **Verification:** The test confirmed that the `LogEntry` object was created with the correct message and timestamp.
 
-1. **Test Hello Service Response**
-   - **Description:** Verifies that the `HelloService` returns a personalized greeting.
-   - **Objective:** Ensure the server responds with the correct greeting based on the input name.
-   - **Testing Scenario:** Request `/app/hello?name=Maria`.
-   - **Expected Behavior:** Response contains "Hello Maria".
-   - **Outcome:** Passed
-   - **Verification:** Verified that the response text contains the correct greeting.
+### 2. Test: `LogEntryTest.testLogEntrySettersAndGetters`
 
-2. **Test Current Time Service Response**
-   - **Description:** Verifies that the `CurrentTimeService` returns the current time.
-   - **Objective:** Ensure the server responds with the current time.
-   - **Testing Scenario:** Request `/app/current-time`.
-   - **Expected Behavior:** Response contains "Current time is:".
-   - **Outcome:** Passed
-   - **Verification:** Verified that the response text contains the current time message.
+- **Description:** Verifies the functionality of setter and getter methods in the `LogEntry` class.
+- **Objective:** Ensure that the setters and getters work correctly.
+- **Test Scenario:** Set a message and timestamp on a `LogEntry` and then retrieve the values using the getters.
+- **Expected Behavior:** The retrieved values should match the set values.
+- **Result:** Passed.
+- **Verification:** The setter and getter methods returned the expected values.
 
-3. **Test Pi Service Response**
-   - **Description:** Verifies that the `PiService` returns the value of π with specified decimals.
-   - **Objective:** Ensure the server responds with the correct value of π.
-   - **Testing Scenario:** Request `/app/pi?decimals=5`.
-   - **Expected Behavior:** Response contains "3.14159".
-   - **Outcome:** Passed
-   - **Verification:** Verified that the response text contains the correct value of π.
+### 3. Test: `LogRepositoryTest.testSaveAndRetrieveLog`
 
-4. **Test Random Service Response**
-   - **Description:** Verifies that the `RandomService` returns a random number within a specified range.
-   - **Objective:** Ensure the server responds with a random number between min and max values.
-   - **Testing Scenario:** Request `/app/random?min=1&max=10`.
-   - **Expected Behavior:** Response contains "Random value between".
-   - **Outcome:** Passed
-   - **Verification:** Verified that the response text contains a random number within the specified range.
+- **Description:** Tests saving a log entry and retrieving the last 10 logs from the `LogRepository`.
+- **Objective:** Ensure the repository correctly saves and retrieves logs.
+- **Test Scenario:** Simulate saving a log entry and retrieving it using the custom query method.
+- **Expected Behavior:** The log entry should be saved and returned from the repository.
+- **Result:** Passed.
+- **Verification:** The log entry was correctly saved and retrieved, and the repository methods were called the expected number of times.
 
-5. **Test Load Static File**
-   - **Description:** Verifies that static files such as `index.html` are served correctly.
-   - **Objective:** Ensure the server serves static files with a 200 OK status.
-   - **Testing Scenario:** Request `/index.html`.
-   - **Expected Behavior:** Response status is 200.
-   - **Outcome:** Passed
-   - **Verification:** Verified that the response status code is 200.
+### 4. Test: `LogServiceControllerTest.testLogMessage`
 
-6. **Test Invalid Request**
-   - **Description:** Verifies that invalid requests return a 404 error.
-   - **Objective:** Ensure the server returns a 404 status for non-existent files.
-   - **Testing Scenario:** Request `/nonexistentfile.html`.
-   - **Expected Behavior:** Response status is 404.
-   - **Outcome:** Passed
-   - **Verification:** Verified that the response status code is 404.
+- **Description:** Verifies that the `LogServiceController` saves a log message and retrieves the last 10 logs.
+- **Objective:** Ensure the controller interacts correctly with the repository.
+- **Test Scenario:** Simulate a log message being sent to the controller, and verify that it is saved and the last 10 logs are returned.
+- **Expected Behavior:** The log message should be saved, and the correct number of logs should be returned.
+- **Result:** Passed.
+- **Verification:** The log message was saved, and the repository returned the correct logs.
 
-7. **Test Multiple Connections**
-   - **Description:** Verifies that the server can handle multiple simultaneous connections.
-   - **Objective:** Ensure the server handles multiple requests without issues.
-   - **Testing Scenario:** Concurrently request `/index.html` from multiple clients.
-   - **Expected Behavior:** Server responds to all requests with correct content.
-   - **Outcome:** Passed
-   - **Verification:** Verified that all requests are handled correctly.
-  
+### 5. Test: `RestServiceApplicationTest.testMain`
+
+- **Description:** Simulates running the main method of the application.
+- **Objective:** Ensure the application starts without exceptions.
+- **Test Scenario:** Call the `main()` method of `RestServiceApplication`.
+- **Expected Behavior:** The application should start without throwing any exceptions.
+- **Result:** Passed.
+- **Verification:** The test passed, indicating that the application starts successfully.
+
+### 6. Test: `RestServiceApplicationTest.testGetPortFromEnv`
+
+- **Description:** Verifies that the application retrieves the correct port from the environment variable.
+- **Objective:** Ensure the application can read the port from the `PORT` environment variable.
+- **Test Scenario:** Set the `PORT` environment variable and verify that the application retrieves it correctly.
+- **Expected Behavior:** The retrieved port should match the value of the environment variable.
+- **Result:** Passed.
+- **Verification:** The test confirmed that the application correctly reads the port from the environment variable.
+
+### 7. Test: `RestServiceApplicationTest.testGetDefaultPort`
+
+- **Description:** Verifies that the application uses the default port if no environment variable is set.
+- **Objective:** Ensure the application defaults to port 6000 when no `PORT` environment variable is provided.
+- **Test Scenario:** Clear the `PORT` environment variable and check that the application defaults to port 6000.
+- **Expected Behavior:** The port should default to 6000.
+- **Result:** Passed.
+- **Verification:** The test confirmed that the default port was used correctly.
    
  ![image](https://github.com/user-attachments/assets/1184e116-fcb4-484e-9770-0d829d42d8ca)
 
+### Building Docker Images
 
+1. **Build the images for each service** and push them to Docker Hub:
+    ```sh
+    docker build -tag modularizacion .
+    docker tag modularizacion alexandrac1420/modularizacion      
+    docker push alexandrac1420/modularizacion:latest
+    ```
+
+2. The Docker image `alexandrac1420/modularizacion:latest` was pushed to the Docker Hub repository and referenced in the `docker-compose.yml` file.
+
+3. **Run the containers** using Docker Compose:
+    On the virtual machine, the `docker-compose.yml` file was uploaded, and the following command was executed to start the containers:
+    ```sh
+    docker-compose up -d
+    ```
+
+4. The application was then accessible through the following URL:
+    [http://ec2-44-204-153-46.compute-1.amazonaws.com:8080/index.html](http://ec2-44-204-153-46.compute-1.amazonaws.com:8080/index.html)
+
+### Docker Compose Configuration
+
+The following `docker-compose.yml` file configures the web service, multiple instances of `LogService`, and MongoDB:
+
+```yaml
+version: '2'
+
+services:
+    web:
+        image: alexandrac1420/modularizacion:latest
+        container_name: web
+        ports:
+            - "8080:6000"
+    
+    logservice1:
+        image: alexandrac1420/modularizacion:latest
+        container_name: logservice1
+        environment:
+            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logs
+        ports:
+            - "34001:6000"
+    
+    logservice2:
+        image: alexandrac1420/modularizacion:latest
+        container_name: logservice2
+        environment:
+            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logs
+        ports:
+            - "34002:6000"
+    
+    logservice3:
+        image: alexandrac1420/modularizacion:latest
+        container_name: logservice3
+        environment:
+            - SPRING_DATA_MONGODB_URI=mongodb://db:27017/logs
+        ports:
+            - "34003:6000"
+    
+    db:
+        image: mongo:3.6.1
+        container_name: db
+        volumes:
+            - mongodb:/data/db
+            - mongodb_config:/data/configdb
+        ports:
+            - "27017:27017"
+        command: mongod
+
+volumes:
+    mongodb:
+    mongodb_config:
+
+```
+### Verifying Execution
+
+To verify that all containers are running correctly on the virtual machine, the following command was used:
+
+```sh
+docker ps
+```
 
 ## Built With
 
 
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Git](http://git-scm.com/) - Version Control System
+* [Docker](https://www.docker.com) - Containerization and deployment.
+* [MongoDB](https://www.mongodb.com) - NoSQL database. 
 
 ## Versioning
 
-I use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/alexandrac1420/Servidores_Aplicaciones.git).
+I use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/alexandrac1420/Modularizacion_Virtualizacion.git).
 
 ## Authors
 
