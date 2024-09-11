@@ -8,7 +8,7 @@
   <name>DockerAWS</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <exec.mainclass>co.edu.escuelaing.arep.RestServiceApplication</exec.mainclass>
+    <exec.mainclass>edu.escuelaing.arep.RestServiceApplication</exec.mainclass>
   </properties>
   <dependencies>
     <dependency>
@@ -71,6 +71,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.3.3</version>
+                <configuration>
+                    <mainClass>edu.escuelaing.arep.RestServiceApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
 </project>
