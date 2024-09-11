@@ -84,7 +84,7 @@ You need to install the following tools and configure their dependencies:
 
 3. Run the application:
     ```sh
-    java -cp target/DockerAWS-1.0-SNAPSHOT.jar edu.escuelaing.arep.RestServiceApplication 
+    java -jar target/DockerAWS-1.0-SNAPSHOT.jar
 
     ```
     And now you can access `index.html` and other static files in http://localhost:8080/index.html
